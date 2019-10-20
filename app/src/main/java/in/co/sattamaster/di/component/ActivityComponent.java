@@ -18,12 +18,13 @@ package in.co.sattamaster.di.component;
 
 import in.co.sattamaster.di.PerActivity;
 import in.co.sattamaster.di.module.ActivityModule;
-import in.co.sattamaster.ui.History.HistoryActivity;
-import in.co.sattamaster.ui.Homepage.LocationPageActivity;
-import in.co.sattamaster.ui.Homepage.LoginScreenActivity;
+import in.co.sattamaster.ui.AddCoins.AddCoinsActivity;
+import in.co.sattamaster.ui.ModeratorSettings.ModeratorSettingsSettingsActivity;
+import in.co.sattamaster.ui.AllBids.AllBidsActivity;
+import in.co.sattamaster.ui.AllBids.BidsDetailsActivity;
+import in.co.sattamaster.ui.AllUsers.AllUsersActivity;
+import in.co.sattamaster.ui.login.LoginScreenActivity;
 import in.co.sattamaster.ui.Homepage.MainActivity;
-import in.co.sattamaster.ui.PlayMatka.PlayMatkaActivity;
-import in.co.sattamaster.ui.Result.ResultActivity;
 import in.co.sattamaster.ui.Withdraw.WithdrawActivity;
 
 import dagger.Component;
@@ -37,12 +38,13 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(LoginScreenActivity activity);
+    void inject(BidsDetailsActivity activity);
     void inject(MainActivity activity);
-    void inject(PlayMatkaActivity activity);
-    void inject(HistoryActivity activity);
-    void inject(LocationPageActivity activity);
-    void inject(ResultActivity activity);
+    void inject(ModeratorSettingsSettingsActivity activity);
     void inject(WithdrawActivity activity);
+    void inject(AddCoinsActivity activity);
+    void inject(AllUsersActivity activity);
+    void inject(AllBidsActivity activity);
 
 
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SattaApp</string>
+    <string name="app_name">Satta Moderator</string>
 
     <!--App Message-->
     <string name="api_retry_error">Please retry!</string>
@@ -11,4 +11,5 @@
     <string name="app_market_link">"market://details?id="</string>
     <string name="bid_amount">Amt</string>
     <string name="bid_no">Bid No.</string>
+    <string name="title_activity_all_bids">AllBidsActivity</string>
 </resources>

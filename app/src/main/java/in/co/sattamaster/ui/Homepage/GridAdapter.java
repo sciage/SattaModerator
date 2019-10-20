@@ -10,15 +10,21 @@ import android.widget.TextView;
 
 import in.co.sattamaster.R;
 import in.co.sattamaster.SquareLayout;
-import in.co.sattamaster.ui.Contact.ContactUsActivity;
-import in.co.sattamaster.ui.History.HistoryActivity;
-import in.co.sattamaster.ui.Result.ResultActivity;
-import in.co.sattamaster.ui.Withdraw.WithdrawActivity;
+import in.co.sattamaster.ui.AddCoins.AddCoinsActivity;
+import in.co.sattamaster.ui.AllBids.AllBidsActivity;
+import in.co.sattamaster.ui.AllUsers.AllUsersActivity;
+import in.co.sattamaster.ui.base.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GridAdapter extends BaseAdapter{
+    private UserObject dataSet;
+
+    public void addAll(UserObject moveResults) {
+        dataSet = moveResults;
+    }
+
     public static class Item{
         public String text;
         public int resId;
@@ -28,33 +34,21 @@ public class GridAdapter extends BaseAdapter{
     private Context mContext;
     public GridAdapter(Context context) {
 
-        Item object = new Item();
-        object.text = "Play Matka";
-        mItems.add(object);
-        notifyDataSetChanged();
-
 
         Item object02 = new Item();
-        object02.text = "Contact Us";
+        object02.text = "All Users";
         mItems.add(object02);
         notifyDataSetChanged();
 
 
         Item object03 = new Item();
-        object03.text = "Withdraw Balance";
+        object03.text = "Add Coins";
         mItems.add(object03);
         notifyDataSetChanged();
 
-
-        Item object04 = new Item();
-        object04.text = "History";
-        mItems.add(object04);
-        notifyDataSetChanged();
-
-
-        Item object05 = new Item();
-        object05.text = "Result chart";
-        mItems.add(object05);
+        Item object08 = new Item();
+        object08.text = "All Bids";
+        mItems.add(object08);
         notifyDataSetChanged();
 
         mContext = context;
@@ -87,46 +81,45 @@ public class GridAdapter extends BaseAdapter{
 
         location_id.setText(mItems.get(position).text);
 
-        if (position == 0){
-            box_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), LocationPageActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
-        } else if (position == 1){
-            box_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ContactUsActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
-        } else if (position == 2){
-            box_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), WithdrawActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
-        } else if (position == 3){
-            box_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), HistoryActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
-        } else if (position == 4){
-            box_back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ResultActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
+        switch (position){
+            case 0:
+
+                box_back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), AllUsersActivity.class);
+                        intent.putExtra(Constants.WALLET_BALANCE, dataSet.getUser().getProfile().getCoin_balance());
+
+                        v.getContext().startActivity(intent);
+                    }
+                });
+
+                break;
+            case 1:
+                box_back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), AddCoinsActivity.class);
+                        intent.putExtra(Constants.WALLET_BALANCE, dataSet.getUser().getProfile().getCoin_balance());
+
+                        v.getContext().startActivity(intent);
+                    }
+                });
+
+                break;
+
+            case 2:
+                box_back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), AllBidsActivity.class);
+                        intent.putExtra(Constants.WALLET_BALANCE, dataSet.getUser().getProfile().getCoin_balance());
+
+                        v.getContext().startActivity(intent);
+                    }
+                });
+
+                break;
         }
 
 

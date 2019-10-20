@@ -17,17 +17,22 @@ package in.co.sattamaster.data;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import com.google.gson.JsonObject;
 
 import in.co.sattamaster.data.network.ApiHeader;
 import in.co.sattamaster.data.network.ApiHelper;
 import in.co.sattamaster.data.prefs.PreferencesHelper;
 import in.co.sattamaster.di.ApplicationContext;
 import in.co.sattamaster.dto.Bid;
+import in.co.sattamaster.ui.AddCoins.AddUserCoinsResponse;
+import in.co.sattamaster.ui.AllBids.HistoryDetailsResponse;
+import in.co.sattamaster.ui.AllBids.HistoryPojo;
+import in.co.sattamaster.ui.Homepage.GetAllUsers;
+import in.co.sattamaster.ui.Homepage.UserObject;
+import in.co.sattamaster.ui.Withdraw.WithdrawPojo;
+import in.co.sattamaster.ui.login.LoginResponse;
 import io.reactivex.Single;
 
 import javax.inject.Inject;
@@ -62,8 +67,43 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<Bid> sendBidset(String user_id, String centre_id, JSONObject bid) {
-        return mApiHelper.sendBidset(user_id, centre_id, bid);
+    public Single<Bid> sendBidset(JsonObject bid, SharedPreferences sharedPreferences) {
+        return mApiHelper.sendBidset(bid, sharedPreferences);
+    }
+
+    @Override
+    public Single<LoginResponse> loginUser(JsonObject bids, SharedPreferences sharedPreferences) {
+        return mApiHelper.loginUser(bids, sharedPreferences);
+    }
+
+    @Override
+    public Single<UserObject> getUserProfile(SharedPreferences sharedPreferences) {
+        return mApiHelper.getUserProfile(sharedPreferences);
+    }
+
+    @Override
+    public Single<GetAllUsers> getAllUsers(String moderator_id, SharedPreferences sharedPreferences, String page) {
+        return mApiHelper.getAllUsers(moderator_id, sharedPreferences, page);
+    }
+
+    @Override
+    public Single<AddUserCoinsResponse> addUserCoin(String userId, JsonObject coinBalance, SharedPreferences sharedPreferences) {
+        return mApiHelper.addUserCoin(userId, coinBalance, sharedPreferences);
+    }
+
+    @Override
+    public Single<HistoryPojo> getBids( String page) {
+        return mApiHelper.getBids(page);
+    }
+
+    @Override
+    public Single<HistoryDetailsResponse> getBidDetails(String id, SharedPreferences sharedPreferences) {
+        return mApiHelper.getBidDetails(id, sharedPreferences);
+    }
+
+    @Override
+    public Single<WithdrawPojo> withdrawRequest(SharedPreferences sharedPreferences, String page) {
+        return mApiHelper.withdrawRequest(sharedPreferences, page);
     }
 
  /*   @Override
@@ -101,13 +141,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void registerFirebaseToken(String token) {
+    public void registerToken(String token) {
 
     }
 
     @Override
-    public String getFirebaseToken() {
-        return mPreferencesHelper.getFirebaseToken();
+    public String getToken() {
+        return null;
     }
 
     /*
@@ -134,19 +174,19 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<LoginResponse> doGoogleLoginApiCall(LoginRequest.GoogleLoginRequest
+    public Single<RegisterResponse> doGoogleLoginApiCall(LoginRequest.GoogleLoginRequest
                                                               request) {
         return mApiHelper.doGoogleLoginApiCall(request);
     }
 
     @Override
-    public Single<LoginResponse> doFacebookLoginApiCall(LoginRequest.FacebookLoginRequest
+    public Single<RegisterResponse> doFacebookLoginApiCall(LoginRequest.FacebookLoginRequest
                                                                 request) {
         return mApiHelper.doFacebookLoginApiCall(request);
     }
 
     @Override
-    public Single<LoginResponse> doServerLoginApiCall(LoginRequest.ServerLoginRequest
+    public Single<RegisterResponse> doServerLoginApiCall(LoginRequest.ServerLoginRequest
                                                               request) {
         return mApiHelper.doServerLoginApiCall(request);
     }

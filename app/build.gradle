@@ -16,22 +16,26 @@ repositories {
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "in.co.sattamaster"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "BASE_URL", "\"https://sattamaster.co.in/api\""
+        buildConfigField "String", "BASE_URL", "\"https://sattamaster.co.in/api/\""
         buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
     }
     buildTypes {
         release {
+            applicationIdSuffix ".moderator"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".modebug"
         }
     }
     compileOptions {
@@ -42,9 +46,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.amitshekhar.android:rx2-android-networking:1.0.2'
     implementation 'com.google.dagger:dagger:2.20'
     annotationProcessor "com.google.dagger:dagger-compiler:2.20"
     compileOnly 'javax.annotation:jsr250-api:1.0'
@@ -52,15 +55,14 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
 
-    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.2.1'
+    //implementation 'com.squareup.okhttp3:okhttp:4.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-    implementation 'com.jaredrummler:material-spinner:1.3.1'
-
 
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
 
@@ -71,6 +73,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.6.1'
+
 
 }

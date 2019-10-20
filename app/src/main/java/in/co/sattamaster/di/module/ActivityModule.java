@@ -20,24 +20,27 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import in.co.sattamaster.di.ActivityContext;
-import in.co.sattamaster.ui.History.HistoryActivityMvpPresenter;
-import in.co.sattamaster.ui.History.HistoryActivityMvpView;
-import in.co.sattamaster.ui.History.HistoryActivityPresenter;
-import in.co.sattamaster.ui.Homepage.LocationPageMvpPresenter;
-import in.co.sattamaster.ui.Homepage.LocationPageMvpView;
-import in.co.sattamaster.ui.Homepage.LocationPagePresenter;
-import in.co.sattamaster.ui.Homepage.LoginScreenMvpPresenter;
-import in.co.sattamaster.ui.Homepage.LoginScreenMvpView;
-import in.co.sattamaster.ui.Homepage.LoginScreenPresenter;
+import in.co.sattamaster.ui.AddCoins.AddCoinsMvpPresenter;
+import in.co.sattamaster.ui.AddCoins.AddCoinsMvpView;
+import in.co.sattamaster.ui.AddCoins.AddCoinsPresenter;
+import in.co.sattamaster.ui.ModeratorSettings.ModeratorSettingsMvpPresenter;
+import in.co.sattamaster.ui.ModeratorSettings.ModeratorSettingsMvpView;
+import in.co.sattamaster.ui.ModeratorSettings.ModeratorSettingsPresenter;
+import in.co.sattamaster.ui.AllBids.AllBidsMvpPresenter;
+import in.co.sattamaster.ui.AllBids.AllBidsMvpView;
+import in.co.sattamaster.ui.AllBids.AllBidsPresenter;
+import in.co.sattamaster.ui.AllBids.BidsDetailsMvpPresenter;
+import in.co.sattamaster.ui.AllBids.BidsDetailsMvpView;
+import in.co.sattamaster.ui.AllBids.BidsDetailsPresenter;
+import in.co.sattamaster.ui.AllUsers.AllUsersMvpPresenter;
+import in.co.sattamaster.ui.AllUsers.AllUsersMvpView;
+import in.co.sattamaster.ui.AllUsers.AllUsersPresenter;
+import in.co.sattamaster.ui.login.LoginScreenMvpPresenter;
+import in.co.sattamaster.ui.login.LoginScreenMvpView;
+import in.co.sattamaster.ui.login.LoginScreenPresenter;
 import in.co.sattamaster.ui.Homepage.MainActivityMvpPresenter;
 import in.co.sattamaster.ui.Homepage.MainActivityMvpView;
 import in.co.sattamaster.ui.Homepage.MainActivityPresenter;
-import in.co.sattamaster.ui.PlayMatka.PlayMatkaActivityMvpPresenter;
-import in.co.sattamaster.ui.PlayMatka.PlayMatkaActivityMvpView;
-import in.co.sattamaster.ui.PlayMatka.PlayMatkaActivityPresenter;
-import in.co.sattamaster.ui.Result.ResultActivityMvpPresenter;
-import in.co.sattamaster.ui.Result.ResultActivityMvpView;
-import in.co.sattamaster.ui.Result.ResultActivityPresenter;
 import in.co.sattamaster.ui.Withdraw.WithdrawMvpPresenter;
 import in.co.sattamaster.ui.Withdraw.WithdrawMvpView;
 import in.co.sattamaster.ui.Withdraw.WithdrawPresenter;
@@ -82,10 +85,15 @@ public class ActivityModule {
         return new AppSchedulerProvider();
     }
 
+    @Provides
+    AllBidsMvpPresenter<AllBidsMvpView> provideAllBidsMvpPresenter(
+            AllBidsPresenter<AllBidsMvpView> presenter) {
+        return presenter;
+    }
 
     @Provides
-    HistoryActivityMvpPresenter<HistoryActivityMvpView> provideHistoryActivityMvpPresenter(
-            HistoryActivityPresenter<HistoryActivityMvpView> presenter) {
+    BidsDetailsMvpPresenter<BidsDetailsMvpView> provideHistoryDetailsMvpPresenter(
+            BidsDetailsPresenter<BidsDetailsMvpView> presenter) {
         return presenter;
     }
 
@@ -96,26 +104,25 @@ public class ActivityModule {
     }
 
     @Provides
-    LocationPageMvpPresenter<LocationPageMvpView> provideLocationPageMvpPresenter(
-            LocationPagePresenter<LocationPageMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
     MainActivityMvpPresenter<MainActivityMvpView> provideMainActivityMvpPresenter(
             MainActivityPresenter<MainActivityMvpView> presenter) {
         return presenter;
     }
-
     @Provides
-    PlayMatkaActivityMvpPresenter<PlayMatkaActivityMvpView> providePlayMatkaMvpPresenter(
-            PlayMatkaActivityPresenter<PlayMatkaActivityMvpView> presenter) {
+    AllUsersMvpPresenter<AllUsersMvpView> provideAllUsersMvpPresenter(
+            AllUsersPresenter<AllUsersMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    ResultActivityMvpPresenter<ResultActivityMvpView> provideResultMvpPresenter(
-            ResultActivityPresenter<ResultActivityMvpView> presenter) {
+    ModeratorSettingsMvpPresenter<ModeratorSettingsMvpView> provideAddModeratorMvpPresenter(
+            ModeratorSettingsPresenter<ModeratorSettingsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AddCoinsMvpPresenter<AddCoinsMvpView> provideAddCoinsMvpPresenter(
+            AddCoinsPresenter<AddCoinsMvpView> presenter) {
         return presenter;
     }
 

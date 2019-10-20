@@ -16,26 +16,28 @@
 package in.co.sattamaster.data.network;
 
 
-import com.rx2androidnetworking.Rx2AndroidNetworking;
+import android.content.SharedPreferences;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.security.cert.CertificateException;
-import java.util.HashMap;
+import com.google.gson.JsonObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import in.co.sattamaster.dto.Bid;
+import in.co.sattamaster.retrofit.NetworkClient;
+import in.co.sattamaster.retrofit.NetworkInterface;
+import in.co.sattamaster.ui.AddCoins.AddUserCoinsResponse;
+import in.co.sattamaster.ui.AllBids.HistoryDetailsResponse;
+import in.co.sattamaster.ui.AllBids.HistoryPojo;
+import in.co.sattamaster.ui.Homepage.GetAllUsers;
+import in.co.sattamaster.ui.Homepage.UserObject;
+
+import in.co.sattamaster.ui.Withdraw.WithdrawPojo;
+import in.co.sattamaster.ui.login.LoginResponse;
 import io.reactivex.Single;
-import okhttp3.OkHttpClient;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by janisharali on 28/01/17.
@@ -62,61 +64,120 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Single<Bid> sendBidset(String user_id, String centre_id, JSONObject bids) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.BIDSET)
-                //  .addHeaders(mApiHeader.getProtectedApiHeader())
+    public Single<Bid> sendBidset(JsonObject bids, SharedPreferences sharedPreferences) {
+   /*     return Rx2AndroidNetworking.post(ApiEndPoint.BIDSET)
                 .setOkHttpClient(getUnsafeOkHttpClient())
-             //   .addBodyParameter("user_id", user_id)
-              //  .addBodyParameter("centre_id", centre_id)
-                .addJSONObjectBody(bids)
+                .addJsonObjectBody(bids)
                 .build()
-                .getObjectSingle(Bid.class);
+                .getObjectSingle(Bid.class); */
+
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .sendBidset(bids)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+
+    @Override
+    public Single<HistoryPojo> getBids( String page) {
+      /*  return Rx2AndroidNetworking.get(ApiEndPoint.BIDSET)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .addHeaders("Authorization", "Bearer" + " " + token)
+                .build()
+                .getObjectSingle(HistoryPojo.class);
+
+       */
+        return  NetworkClient.getRetrofit().create(NetworkInterface.class)
+                .getBids(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    @Override
+    public Single<LoginResponse> loginUser(JsonObject bids, SharedPreferences sharedPreferences) {
+     /*   return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_USER)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .addJsonObjectBody(bids)
+                .build()
+                .getObjectSingle(LoginResponse.class); */
+
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .loginUser(bids)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Single<AddUserCoinsResponse> addUserCoin(String userId, JsonObject coinBalance, SharedPreferences sharedPreferences) {
+     /*   return Rx2AndroidNetworking.post(ApiEndPoint.ADD_USER_COIN)
+                .addPathParameter("user_id", userId)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .addJsonObjectBody(coinBalance)
+                .build()
+                .getObjectSingle(AddUserCoinsResponse.class); */
+
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .addUserCoin(userId, coinBalance)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
 
 
+    @Override
+    public Single<HistoryDetailsResponse> getBidDetails(String id, SharedPreferences sharedPreferences) {
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .getBidDetails(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-    private static OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-
-            // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
-            OkHttpClient okHttpClient = builder.build();
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
+
+    @Override
+    public Single<GetAllUsers> getAllUsers(String moderator_id, SharedPreferences sharedPreferences, String getAllUsers) {
+    /*    return Rx2AndroidNetworking.get(ApiEndPoint.GET_ALL_USERS)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .build()
+                .getObjectSingle(GetAllUsers.class); */
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .getAllUsers(moderator_id, getAllUsers)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    @Override
+    public Single<UserObject> getUserProfile(SharedPreferences sharedPreferences) {
+       /*  return Rx2AndroidNetworking.get(ApiEndPoint.GET_USER_PROFILE)
+                .addHeaders("Authorization", "Bearer" + " " + token)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .build()
+                .getObjectSingle(UserObject.class); */
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .getUserProfile()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    @Override
+    public Single<WithdrawPojo> withdrawRequest(SharedPreferences sharedPreferences, String withdrawRequest) {
+       /* return Rx2AndroidNetworking.get(ApiEndPoint.GET_CENTRES)
+                .setOkHttpClient(getUnsafeOkHttpClient())
+                .build()
+                .getObjectListSingle(LocationPojo.class);
+        */
+        return  NetworkClient.getRetrofit(sharedPreferences).create(NetworkInterface.class)
+                .withdrawRequest(withdrawRequest)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+
 
     // block_user_insert.php
 
@@ -140,7 +201,7 @@ public class AppApiHelper implements ApiHelper {
     // post community group
 /*
     @Override
-    public Single<LoginResponse> sendAgeOnlineApi(String name, String email, String userId, String deviceId, String socialNetwork) {
+    public Single<RegisterResponse> sendAgeOnlineApi(String name, String email, String userId, String deviceId, String socialNetwork) {
         return Rx2AndroidNetworking.post(ApiEndPoint.JOIN_CATEGORIES)
                 // .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter("firstname", "Amit").addPathParameter("pageNumber", "0")
@@ -150,7 +211,7 @@ public class AppApiHelper implements ApiHelper {
                 .addQueryParameter("limit", "10")
                 .addQueryParameter("limit", "10").addBodyParameter(name,email,userId,deviceId,socialNetwork)
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getObjectSingle(RegisterResponse.class);
     }
 
     // get all groups
@@ -169,7 +230,7 @@ public class AppApiHelper implements ApiHelper {
     // join all groups
 
     @Override
-    public Single<LoginResponse> sendAgeOnlineApi(String name, String email, String userId, String deviceId, String socialNetwork) {
+    public Single<RegisterResponse> sendAgeOnlineApi(String name, String email, String userId, String deviceId, String socialNetwork) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ENDPOINT_LOGIN)
                 // .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter("firstname", "Amit").addPathParameter("pageNumber", "0")
@@ -179,7 +240,7 @@ public class AppApiHelper implements ApiHelper {
                 .addQueryParameter("limit", "10")
                 .addQueryParameter("limit", "10").addBodyParameter(name,email,userId,deviceId,socialNetwork)
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getObjectSingle(RegisterResponse.class);
     }
 
 
@@ -190,33 +251,33 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Single<LoginResponse> doGoogleLoginApiCall(LoginRequest.GoogleLoginRequest
+    public Single<RegisterResponse> doGoogleLoginApiCall(LoginRequest.GoogleLoginRequest
                                                               request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ENDPOINT_GOOGLE_LOGIN)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter(request)
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getObjectSingle(RegisterResponse.class);
     }
 
     @Override
-    public Single<LoginResponse> doFacebookLoginApiCall(LoginRequest.FacebookLoginRequest
+    public Single<RegisterResponse> doFacebookLoginApiCall(LoginRequest.FacebookLoginRequest
                                                                 request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ENDPOINT_FACEBOOK_LOGIN)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter(request)
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getObjectSingle(RegisterResponse.class);
     }
 
     @Override
-    public Single<LoginResponse> doServerLoginApiCall(LoginRequest.ServerLoginRequest
+    public Single<RegisterResponse> doServerLoginApiCall(LoginRequest.ServerLoginRequest
                                                               request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ENDPOINT_SERVER_LOGIN)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter(request)
                 .build()
-                .getObjectSingle(LoginResponse.class);
+                .getObjectSingle(RegisterResponse.class);
     }
 
     @Override
